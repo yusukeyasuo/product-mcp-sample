@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ビルド成果物
+dist/
+build/
+
+# データベース
+*.db
+*.db-journal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 環境設定
+.env
+.env.local
+
+# Claude Desktop設定（個人情報が含まれる可能性があるため）
+claude_desktop_config.json
