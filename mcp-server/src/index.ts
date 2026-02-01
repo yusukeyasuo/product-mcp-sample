@@ -104,6 +104,32 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["id", "price"],
         },
       },
+			{
+				name: "create_product",
+				description: "新しい商品を登録します。",
+				inputSchema: {
+					type: "object",
+					properties: {
+						name: {
+							type: "string",
+							description: "商品名",
+						},
+						price: {
+							type: "number",
+							description: "価格",
+						},
+						stock: {
+							type: "number",
+							description: "在庫数",
+						},
+						category: {
+							type: "string",
+							description: "カテゴリ",
+						},
+					},
+					required: ["name", "price", "stock"],
+				},
+			},
     ],
   };
 });
@@ -229,6 +255,35 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: "text",
               text: `商品ID ${id} の価格を ${price}円 に更新しました。`,
+            },
+          ],
+        };
+      }
+
+      case "create_product": {
+        const { name, price, stock, category } = args as {
+          name: string;
+          price: number;
+          stock: number;
+          category?: string;
+        };
+
+        const result = await new Promise<number>((resolve, reject) => {
+          db.run(
+            "INSERT INTO products (name, price, stock, category) VALUES (?, ?, ?, ?)",
+            [name, price, stock, category || null],
+            function (err) {
+              if (err) reject(err);
+              else resolve(this.lastID);
+            }
+          );
+        });
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `商品「${name}」を登録しました（商品ID: ${result}）`,
             },
           ],
         };
